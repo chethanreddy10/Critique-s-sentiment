@@ -105,28 +105,28 @@ st.markdown(
 # Load vectorizer and model outside the submit button to avoid reloading
 @st.cache_data
 def load_model_and_vectorizer():
-    #vectorizer = pickle.load(open('vectorizer1.pkl', 'rb'))
-    
-     vectorizer_url = 'https://raw.githubusercontent.com/chethanreddy10/Critique-s-sentiment/main/vectorizer1.pkl'
-     model_url = 'https://raw.githubusercontent.com/chethanreddy10/Critique-s-sentiment/main/nb_model2.pkl'
+    # URLs for the raw pickle files
+    vectorizer_url = 'https://raw.githubusercontent.com/chethanreddy10/Critique-s-sentiment/main/vectorizer1.pkl'
+    model_url = 'https://raw.githubusercontent.com/chethanreddy10/Critique-s-sentiment/main/nb_model2.pkl'
 
     # Download and save vectorizer
-     vectorizer_response = requests.get(vectorizer_url)
-     with open('vectorizer1.pkl', 'wb') as f:
-     f.write(vectorizer_response.content)
+    vectorizer_response = requests.get(vectorizer_url)
+    with open('vectorizer1.pkl', 'wb') as f:
+        f.write(vectorizer_response.content)  # This line is correctly indented
 
-   # Download and save model
-     model_response = requests.get(model_url)
-     with open('nb_model2.pkl', 'wb') as f:
-     f.write(model_response.content)
+    # Download and save model
+    model_response = requests.get(model_url)
+    with open('nb_model2.pkl', 'wb') as f:
+        f.write(model_response.content)  # This line is also correctly indented
 
     # Load the vectorizer and model
-     with open('vectorizer1.pkl', 'rb') as f:
-     vectorizer = pickle.load(f)
+    with open('vectorizer1.pkl', 'rb') as f:
+        vectorizer = pickle.load(f)
 
-     with open('nb_model2.pkl', 'rb') as f:
-      model = pickle.load(f)
-    return vectorizer, model
+    with open('nb_model2.pkl', 'rb') as f:
+        model = pickle.load(f)
+
+    return vectorizer, model 
 
 
 vectorizer, model = load_model_and_vectorizer()
