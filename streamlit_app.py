@@ -3,6 +3,7 @@ import streamlit as st
 import numpy as np
 import pandas as pd
 # NLP libraries
+import requests
 import pickle
 import re
 import nltk
@@ -104,8 +105,13 @@ st.markdown(
 # Load vectorizer and model outside the submit button to avoid reloading
 @st.cache_data
 def load_model_and_vectorizer():
-    vectorizer = pickle.load(open('vectorizer1.pkl', 'rb'))
-    model = pickle.load(open('nb_model2.pkl', 'rb'))
+    #vectorizer = pickle.load(open('vectorizer1.pkl', 'rb'))
+    
+    vectorizer_url = 'https://raw.githubusercontent.com/chethanreddy10/Critique-s-sentiment/main/vectorizer1.pkl'
+    model_url = 'https://raw.githubusercontent.com/chethanreddy10/Critique-s-sentiment/main/nb_model2.pkl'
+
+    vectorizer = pickle.loads(requests.get(vectorizer_url).content)
+    model = pickle.loads(requests.get(model_url).content)
     return vectorizer, model
 
 
