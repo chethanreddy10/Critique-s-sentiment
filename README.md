@@ -19,7 +19,7 @@ To run the project locally, follow these steps:
    git clone https://github.com/chethanreddy10/Critique-s-sentiment.git
    cd Critique-s-sentiment
 
-2. Create a virtual environment (optional but recommended):
+2. **Create a virtual environment (optional but recommended)**:
 
 For GIT Bash Terminal:
 
@@ -27,14 +27,14 @@ python -m venv venv
 source venv/bin/activate   # On Windows, use 'venv\Scripts\activate'
 
 
-3. Install the dependencies:
+3. **Install the dependencies**:
 
 For GIT Bash Terminal:
 
 pip install -r requirements.txt
 
 
-4. Run the app:
+4. **Run the app**:
 
 For GIT Bash Terminal:
 
