@@ -31,14 +31,14 @@ source venv/bin/activate
 3. **Install the dependencies**:
 
 For GIT Bash Terminal:
-```bash
+
   pip install -r requirements.txt
   
 
 4. **Run the app**:
 
 For GIT Bash Terminal:
-```bash
+
   streamlit run app.py
 
 
