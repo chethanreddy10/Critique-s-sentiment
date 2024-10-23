@@ -1,3 +1,4 @@
+Here’s an edited version of your markdown to make sure it is visually formatted correctly:
 
 # Critique's Sentiment
 
@@ -18,20 +19,28 @@ To run the project locally, follow these steps:
    git clone https://github.com/chethanreddy10/Critique-s-sentiment.git
    cd Critique-s-sentiment
 
-2.Create a virtual environment (optional but recommended):
+2. Create a virtual environment (optional but recommended):
 
- GIT Bash Terminal:
+For GIT Bash Terminal:
 
-python -m venv venv source venv/bin/activate # On Windows, use 'venv\Scripts\activate
+python -m venv venv
+source venv/bin/activate   # On Windows, use 'venv\Scripts\activate'
 
-2. Install the dependencies:
 
-GIT Bash Terminal
+3. Install the dependencies:
+
+For GIT Bash Terminal:
 
 pip install -r requirements.txt
 
-3. Run the app:
 
-GIT Bash Terminal
+4. Run the app:
+
+For GIT Bash Terminal:
 
 streamlit run app.py
+
+
+
+This version should now display correctly with proper indentation and clear formatting for the steps. Let me know if it looks good!
+
