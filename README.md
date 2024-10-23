@@ -23,22 +23,23 @@ To run the project locally, follow these steps:
 
 For GIT Bash Terminal:
 ```bash
-python -m venv venv
-source venv/bin/activate   # On Windows, use 'venv\Scripts\activate'
+  python -m venv venv
+source venv/bin/activate  
+ # On Windows, use 'venv\Scripts\activate'
 
 
 3. **Install the dependencies**:
 
 For GIT Bash Terminal:
 ```bash
-pip install -r requirements.txt
-
+  pip install -r requirements.txt
+  
 
 4. **Run the app**:
 
 For GIT Bash Terminal:
 ```bash
-streamlit run app.py
+  streamlit run app.py
 
 
 
