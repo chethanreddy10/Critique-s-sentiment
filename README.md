@@ -43,5 +43,3 @@ For GIT Bash Terminal:
 
 
 
-This version should now display correctly with proper indentation and clear formatting for the steps. Let me know if it looks good!
-
