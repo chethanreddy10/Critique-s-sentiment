@@ -1,4 +1,3 @@
-Here’s an edited version of your markdown to make sure it is visually formatted correctly:
 
 # Critique's Sentiment
 
