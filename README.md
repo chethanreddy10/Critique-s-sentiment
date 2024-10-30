@@ -41,4 +41,23 @@ For GIT Bash Terminal:
   streamlit run app.py
 
 
+  Usage
+Once the app is running, open the local server link (usually http://localhost:8501) in your browser. Enter a text review into the input box, and the app will output whether the sentiment is positive or negative.
+
+Requirements
+Python 3.7+
+Required Python packages are listed in requirements.txt.
+Preprocessing Steps
+Lowercasing text
+Stop word removal
+Lemmatization
+Sentiment-aware tokenization
+TF-IDF Vectorization
+Model
+The trained machine learning model used for this app is preloaded in the model/ directory and loaded when the app starts. It uses TF-IDF vectorized data for sentiment classification.
+
+Contributing
+Feel free to fork this repository and submit pull requests. For major changes, please open an issue first to discuss what you would like to change.
+
+
 
