@@ -22,7 +22,7 @@ To run the project locally, follow these steps:
 2. **Create a virtual environment (optional but recommended)**:
 
 For GIT Bash Terminal:
-
+'''bash
   python -m venv venv
 source venv/bin/activate  
 On Windows, use 'venv\Scripts\activate'
