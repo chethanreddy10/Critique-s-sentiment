@@ -76,7 +76,8 @@ Enter a text review into the input box, and the app will output whether the sent
 - TF-IDF Vectorization
 
 ## Model
-The trained machine learning model used for this app is preloaded in the `model/` directory and loaded when the app starts. It uses TF-IDF vectorized data for sentiment classification.
+The trained machine learning model used for this app is preloaded in the `model/` directory  as pickle file and loaded when the app starts.
+It uses TF-IDF vectorized data which is fitted with the training data for sentiment classification.
 
 ## Contributing
 Feel free to fork this repository and submit pull requests. For major changes, please open an issue first to discuss what you would like to change.
