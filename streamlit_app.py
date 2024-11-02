@@ -1,72 +1,110 @@
 import streamlit as st
-# General libraries
-import numpy as np
-import pandas as pd
-# NLP libraries
 import pickle
 import re
 import nltk
 from nltk.tokenize import word_tokenize
 from nltk.stem import WordNetLemmatizer
 from nltk.corpus import stopwords, wordnet
-import contractions
-from bs4 import BeautifulSoup
+
 # Download NLTK resources only once
-nltk.download('stopwords')
-nltk.download('wordnet')
-nltk.download('punkt')
-nltk.download('averaged_perceptron_tagger')
-# Initialize the lemmatizer object
+try:
+    stop_words = set(stopwords.words('english'))
+except LookupError:
+    nltk.download('stopwords')
+    nltk.download('wordnet')
+    nltk.download('punkt')
+    nltk.download('averaged_perceptron_tagger')
+    stop_words = set(stopwords.words('english'))
+
+# Initialize lemmatizer
 wnl = WordNetLemmatizer()
-# Customizing the app style
+
+# Set up Streamlit page
 st.set_page_config(page_title="Movie Review Sentiment Analysis", page_icon="🎬")
-# Adding CSS styles to make it more attractive
+
+# Load vectorizer and model
+@st.cache_resource  # Cached only once for all users
+def load_model_and_vectorizer():
+    vectorizer = pickle.load(open('vectorizer1.pkl', 'rb'))
+    model = pickle.load(open('nb_model2.pkl', 'rb'))
+    return vectorizer, model
+
+vectorizer, model = load_model_and_vectorizer()
+
+# Map POS tags for lemmatization
+def get_wordnet_pos(tag):
+    return {
+        'J': wordnet.ADJ,
+        'V': wordnet.VERB,
+        'N': wordnet.NOUN,
+        'R': wordnet.ADV
+    }.get(tag[0], wordnet.NOUN)
+
+# Clean data function
+@st.cache_data
+def clean_data(text):
+    text = text.lower()
+    text = re.sub(r'(http\S+|www\S+|\@\w+|\#)', '', text)  # Remove URLs, @, and hashtags
+    text = re.sub(r'\bnot\b \b\w+\b', lambda x: x.group().replace(' ', '_'), text)  # "not" modifier
+    text = re.sub(r'<.*?>', '', text)  # Remove HTML tags directly with regex
+    text = re.sub(r'\W|\d', ' ', text)  # Remove special chars and digits
+    return re.sub(r'\s+', ' ', text).strip()
+
+# Lemmatize text
+@st.cache_data
+def lemmatize(text):
+    tokens = [wnl.lemmatize(word, get_wordnet_pos(pos))
+              for word, pos in nltk.pos_tag(word_tokenize(text))
+              if word.lower() not in stop_words]
+    return " ".join(tokens)
+
+# Streamlit app title
 st.markdown(
     """
     <style>
-    /* Set background image */
+    /* Background styling */
     .main {
-        background-image: url('https://www.link-to-your-background-image.com');
+        background: linear-gradient(to bottom, #1e3c72, #2a5298);
         background-size: cover;
-        background-repeat: no-repeat;
-        background-attachment: fixed;
         padding: 20px;
     }
-    .reportview-container {
-        background: rgba(0, 0, 139, 0.7); /* Semi-transparent blue overlay */
-        border-radius: 10px;
+    /* Card and text styling */
+    .stApp {
+        background-color: rgba(255, 255, 255, 0.8);
+        border-radius: 12px;
+        padding: 2rem;
     }
-    /* Text Styling */
     h1 {
-        color: #ff4b4b;
+        color: #ff6b6b;
         text-align: center;
-        font-size: 48px;
-        font-family: 'Arial', sans-serif;
+        font-size: 50px;
+        font-family: 'Courier New', Courier, monospace;
         font-weight: bold;
-        text-shadow: 2px 2px 4px #000000;
+        text-shadow: 2px 2px 4px #000;
     }
     h2 {
-        color: #ffffff;
+        color: #f5f5f5;
         text-align: center;
         font-size: 30px;
         font-family: 'Arial', sans-serif;
-        margin-bottom: 30px;
+        margin-bottom: 20px;
     }
-    /* Custom button */
     .stButton>button {
-        background-color: #ff4b4b;
+        background-color: #ff6b6b;
         color: white;
-        border-radius: 10px;
-        font-size: 20px;
-        font-family: 'Arial', sans-serif;
-        padding: 10px 20px;
+        border: none;
+        border-radius: 8px;
+        padding: 12px 24px;
+        font-size: 18px;
+        font-weight: bold;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
         transition: background-color 0.3s ease;
     }
     .stButton>button:hover {
-        background-color: #ff6347;
+        background-color: #ff8a8a;
     }
-    /* Sentiment Result Styling */
-    .stSuccess, .stError {
+    /* Sentiment result styling */
+    .stAlert {
         font-size: 24px;
         font-weight: bold;
         text-align: center;
@@ -75,91 +113,43 @@ st.markdown(
     }
     /* Animations */
     @keyframes fadeIn {
-        0% { opacity: 0; }
-        100% { opacity: 1; }
+        from { opacity: 0; }
+        to { opacity: 1; }
     }
-    /* Footer styling */
     footer {
         font-size: 18px;
-        color: white;
+        color: #ff6b6b;
         text-align: center;
-        margin-top: 50px;
+        margin-top: 20px;
     }
     </style>
     """, unsafe_allow_html=True
 )
-# Load vectorizer and model outside the submit button to avoid reloading
-@st.cache_data
-def load_model_and_vectorizer():
-    vectorizer = pickle.load(open('vectorizer1.pkl', 'rb'))
-    model = pickle.load(open('nb_model2.pkl', 'rb'))
-    return vectorizer, model
-vectorizer, model = load_model_and_vectorizer()
-# Helper function to map POS tag to wordnet POS
-def get_wordnet_pos(tag):
-    if tag.startswith('J'):
-        return wordnet.ADJ
-    elif tag.startswith('V'):
-        return wordnet.VERB
-    elif tag.startswith('N'):
-        return wordnet.NOUN
-    elif tag.startswith('R'):
-        return wordnet.ADV
-    else:
-        return wordnet.NOUN  # Default to noun
-# Clean data function with caching
-@st.cache_data
-def clean_data(text):
-    # Convert to lowercase
-    text = text.lower()
-    # Tie "not" with the next word to retain the negative sentiment
-    text = re.sub(r'\bnot\b \b\w+\b', lambda x: x.group().replace(' ', '_'), text)
-    # Remove URLs
-    text = re.sub(r'http\S+|www\S+|https\S+', '', text, flags=re.MULTILINE)
-    # Remove user @ references and '#' from hashtags
-    text = re.sub(r'\@\w+|\#', '', text)
-    # Remove special characters, numbers, and punctuations
-    text = re.sub(r'\W', ' ', text)
-    text = re.sub(r'\d', ' ', text)
-    # Remove single characters
-    text = re.sub(r'\s+[a-zA-Z]\s+', ' ', text)
-    # Remove multiple spaces
-    text = re.sub(r'\s+', ' ', text)
-    # Remove HTML tags
-    text = BeautifulSoup(text, 'lxml').get_text()
-    # Remove any emails
-    text = re.sub(r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b', '', text)
-    # Remove any mentions
-    text = re.sub(r'@\w+', '', text).strip()
-    # Remove repeated characters
-    text = re.sub(r'(.)\1+', r'\1\1', text)
-    return text.strip()
-# Lemmatization function with caching
-@st.cache_data
-def lemmatize(text):
-    words = word_tokenize(text)
-    filtered_words = [word for word in words if word.lower() not in set(stopwords.words('english'))]
-    pos_tagged = nltk.pos_tag(filtered_words)
-    lemmatized_words = [wnl.lemmatize(word, get_wordnet_pos(pos)) for word, pos in pos_tagged]
-    return " ".join(lemmatized_words)
-# Create the title of the app with emoji
-st.title('🎬 Movie Review Sentiment Analysis 🎥')
-# Subheader for the app
+
+st.title("🎬 Movie Review Sentiment Analysis 🎥")
 st.subheader("Analyze your movie review's sentiment!")
-# Input for user review with a text area for more space
+
+# User input
 review = st.text_area("Enter your Movie Review", placeholder="Type your review here...")
-# Predict sentiment button
+
+# Predict sentiment
 if st.button("Predict Sentiment 🚀"):
     with st.spinner('Analyzing your review...'):
         # Clean and lemmatize the input text
         cleaned_data = clean_data(review)
         lemmatized_data = lemmatize(cleaned_data)
+
         # Predict sentiment
-        prediction = model.predict(vectorizer.transform([lemmatized_data]))
-        # Display sentiment result with emoji
-        if prediction == 0:
-            st.error("😞 The Review is NEGATIVE!")
+        prediction = model.predict(vectorizer.transform([lemmatized_data]))[0]
+
+        # Set sentiment message based on prediction
+        sentiment = "😊 The Review is POSITIVE!" if prediction == 1 else "😞 The Review is NEGATIVE!"
+
+        # Display result based on sentiment
+        if prediction == 1:
+            st.success(sentiment)
         else:
-            st.success("😊 The Review is POSITIVE!")
-# Footer for the app
-st.markdown("<br><hr><footer>THANK YOU FOR YOUR REVIEW!</footer><hr>", unsafe_allow_html=True)
+            st.error(sentiment)
+
+# Footer
+st.markdown("<br><footer>THANK YOU FOR USING OUR APP!</footer>", unsafe_allow_html=True)
