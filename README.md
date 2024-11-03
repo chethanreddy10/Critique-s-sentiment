@@ -12,8 +12,8 @@ Critique's Sentiment provides an accessible way to perform sentiment analysis on
 ## Features
 - **Real-time Sentiment Prediction**: Users receive instant feedback on whether a review is positive or negative.
 - **Text Preprocessing Pipeline**: Detailed text processing steps such as lowercasing, stop word removal, lemmatization, and sentiment-aware tokenization.
-- **ML Model for Classification**: A trained model classifies text sentiment with high accuracy.
-- **TF-IDF Vectorization**: Converts text data into a format that machine learning models can utilize effectively.
+- **ML Model for Classification**: A trained model(SVM) classifies text sentiment with high accuracy. 
+- **TF-IDF Vectorization**: Converts text data into a format (alloactes text data in vector space as numerical data) that machine learning models can utilize effectively.
 
  Project Structure
 ```plaintext
@@ -80,7 +80,3 @@ The trained machine learning model used for this app is preloaded in the `model/
 The dataset is trained on 2 models 1.Naive Bayes Multinomial classifier 2. Support Vector Machine. We picked SVM classifier as it gave us good accuracy and results.
 It uses TF-IDF vectorized data which is fitted with the training data for sentiment classification.  So now when we give any New test input it will be tokenized and 
 the vector space is already predetermined so it will get vectorized with respect to the inital fitted data.
-
-## Contributing
-Feel free to fork this repository and submit pull requests. For major changes, please open an issue first to discuss what you would like to change.
-
