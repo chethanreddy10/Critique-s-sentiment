@@ -26,7 +26,7 @@ st.set_page_config(page_title="Movie Review Sentiment Analysis", page_icon="🎬
 @st.cache_resource  # Cached only once for all users
 def load_model_and_vectorizer():
     vectorizer = pickle.load(open('vectorizer1.pkl', 'rb'))
-    model = pickle.load(open('nb_model2.pkl', 'rb'))
+    model = pickle.load(open('svm.pkl', 'rb'))
     return vectorizer, model
 
 vectorizer, model = load_model_and_vectorizer()
@@ -48,6 +48,7 @@ def clean_data(text):
     text = re.sub(r'\bnot\b \b\w+\b', lambda x: x.group().replace(' ', '_'), text)  # "not" modifier
     text = re.sub(r'<.*?>', '', text)  # Remove HTML tags directly with regex
     text = re.sub(r'\W|\d', ' ', text)  # Remove special chars and digits
+    text = re.sub(r'(.)\1+', r'\1\1', text)  # Remove repeated characters
     return re.sub(r'\s+', ' ', text).strip()
 
 # Lemmatize text
@@ -58,10 +59,10 @@ def lemmatize(text):
               if word.lower() not in stop_words]
     return " ".join(tokens)
 
-# Streamlit app title
+# Updated CSS styling for a new color scheme
 st.markdown(
     """
-    <style>
+ <style>
     /* Background styling */
     .main {
         background: linear-gradient(to bottom, #1e3c72, #2a5298);
