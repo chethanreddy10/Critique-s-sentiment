@@ -144,7 +144,7 @@ if st.button("Predict Sentiment 🚀"):
         prediction = model.predict(vectorizer.transform([lemmatized_data]))[0]
 
         # Set sentiment message based on prediction
-        sentiment = "😊 The Review is POSITIVE!" if prediction == 1 else "😞 The Review is NEGATIVE!"
+        sentiment = " The Review is POSITIVE!" if prediction == 1 else " The Review is NEGATIVE!"
 
         # Display result based on sentiment
         if prediction == 1:
