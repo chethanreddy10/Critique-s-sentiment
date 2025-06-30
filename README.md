@@ -75,6 +75,9 @@ Enter a text review into the input box, and the app will output whether the sent
 - Sentiment-aware tokenization
 - TF-IDF Vectorization
 
+## Dataset 
+ install dataset from https://www.kaggle.com/datasets/lakshmi25npathi/imdb-dataset-of-50k-movie-reviews
+
 ## Model
 The trained machine learning model used for this app is preloaded in the `model/` directory  as pickle file and loaded when the app starts.
 The dataset is trained on 2 models 1.Naive Bayes Multinomial classifier 2. Support Vector Machine. We picked SVM classifier as it gave us good accuracy and results.
